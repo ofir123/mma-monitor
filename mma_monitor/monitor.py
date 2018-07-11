@@ -120,11 +120,6 @@ def report(diff_state):
 
     :param diff_state: A dict representing the diff from the last state.
     """
-    # Stop if there's nothing to report.
-    if not diff_state:
-        logger.info('Nothing to report - No mail was sent.')
-        return
-
     logger.info('Creating E-Mail report...')
     # Create message text.
     new_episodes_text = ''
@@ -175,10 +170,13 @@ def main():
             # Create a diff state, for downloads and reporting.
             diff_state = {k: v for k, v in new_state.items() if v['episode'] > last_state[k]['episode']}
 
-            if config.SHOULD_DOWNLOAD_TORRENTS:
+            if config.SHOULD_DOWNLOAD_TORRENTS and diff_state:
                 download(diff_state, session)
-            if config.SHOULD_SEND_REPORT:
+
+            if config.SHOULD_SEND_REPORT and diff_state:
                 report(diff_state)
+            else:
+                logger.info('Nothing to report - No mail was sent.')
         # Update state file.
         ujson.dump(new_state, open(file_path, 'w'), indent=4)
         logger.info('All done!')
