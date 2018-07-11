@@ -78,6 +78,7 @@ def check_today_torrents(last_state, session):
     :param session: The current mma-torrents session.
     :return: A list of torrents to download.
     """
+    logger.info('Checking today\'s torrents...')
     r = session.get(MMA_TORRENTS_BASE_URL + '/torrents-today.php')
     r.raise_for_status()
     if not r.content:
@@ -103,6 +104,8 @@ def check_today_torrents(last_state, session):
                     episode_number = show.get('season', 0) * 100 + show.get('episode', 0)
 
                     if show_state['episode'] < episode_number:
+                        logger.info('New episode was found - {}: Episode {}'.format(
+                            show_title.title(), episode_number))
                         torrent_id = href.split('id=')[1].split('&')[0]
                         new_state[show_title] = {
                             'episode': episode_number,
@@ -117,16 +120,17 @@ def report(diff_state):
 
     :param diff_state: A dict representing the diff from the last state.
     """
-    logger.info('Creating E-Mail report...')
     # Stop if there's nothing to report.
     if not diff_state:
         logger.info('Nothing to report - No mail was sent.')
         return
 
+    logger.info('Creating E-Mail report...')
     # Create message text.
     new_episodes_text = ''
     for show_name, episode_details in sorted(diff_state.items()):
-        new_episodes_text += '{}: Episode {}\r\n'.format(show_name, episode_details['episode'])
+        new_episodes_text += '{}: Episode {}\r\n'.format(
+            show_name.title().replace('Ufc', 'UFC'), episode_details['episode'])
 
     # Send messages.
     for to_address in config.EMAILS_LIST:

@@ -40,4 +40,4 @@ The easiest way to configure automatic monitoring, is by using crontab:
 
 There, add the following line, to get show updates every day at 8 PM (or any other hour you like):
 
-    0 20 * * * python3 <MMA_MONITOR_SCRIPT_PATH>
+    0 20 * * * mma-monitor
