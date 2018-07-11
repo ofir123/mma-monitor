@@ -176,7 +176,7 @@ def main():
             if config.SHOULD_SEND_REPORT:
                 report(diff_state)
         # Update state file.
-        ujson.dump(new_state, open(file_path, 'w'))
+        ujson.dump(new_state, open(file_path, 'w'), indent=4)
         logger.info('All done!')
 
 
