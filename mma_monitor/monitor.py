@@ -56,7 +56,7 @@ def _send_message(to_email, subject, content):
             server.quit()
 
 
-def load_last_state(file_path):
+def _load_last_state(file_path):
     """
     Load last state from local JSON file.
 
@@ -68,6 +68,23 @@ def load_last_state(file_path):
         logger.info('File doesn\'t exist! Starting from scratch...')
         return {show: {'episode': -1, 'torrent': None} for show in SHOWS_LIST}
     return ujson.load(open(file_path, 'r', encoding='UTF-8'))
+
+
+def _validate_show(show):
+    """
+    Make sure the show version is relevant.
+    Accept only shows in 720p quality, with no title or the title "Preliminaries",
+    and not from the "Ebi" release group.
+
+    :param show: The show object to verify.
+    :return: True if the show version is relevant, and False otherwise.
+    """
+    show_source = show.get('source')
+    show_title = show.get('title', '').lower()
+    return show.get('screen_size') == '720p' and \
+        isinstance(show_source, str) and show_source.lower() == 'hdtv' and \
+        (not show_title or 'prelim' in show_title and 'early' not in show_title) and \
+        show.get('release_group', '').lower() != 'ebi'
 
 
 def check_today_torrents(last_state, session):
@@ -96,7 +113,7 @@ def check_today_torrents(last_state, session):
             # Check if the episode is new, and relevant.
             show = guessit(title)
 
-            if show.get('screen_size') == '720p' and 'web' not in title.lower():
+            if _validate_show(show):
                 show_title = show.get('title', '').lower()
                 show_state = last_state.get(show_title)
 
@@ -157,7 +174,7 @@ def main():
     with logbook.NestedSetup(_get_log_handlers()).applicationbound():
         file_path = config.JSON_FILE_PATH or \
                     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'last_state.json')
-        last_state = load_last_state(file_path)
+        last_state = _load_last_state(file_path)
         # Login to mma-torrents.
         with requests_html.HTMLSession() as session:
             r = session.post(MMA_TORRENTS_BASE_URL + '/account-login.php', data={
