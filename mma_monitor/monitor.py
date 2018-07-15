@@ -113,7 +113,7 @@ def check_today_torrents(last_state, session):
             show = guessit(title)
 
             if _validate_show(show):
-                episode_title = show.get('episode_title').lower()
+                episode_title = show.get('episode_title', '').lower()
                 show_title = '{}{}'.format(
                     show.get('title', '').lower(), ' - {}'.format(episode_title) if episode_title else '')
                 show_state = last_state.get(show_title)
