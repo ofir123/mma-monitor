@@ -164,7 +164,7 @@ def download(diff_state, session):
         torrent_response = session.get(episode_details['torrent'])
         if torrent_response.status_code == 200 and torrent_response.content:
             # Success! Save the new torrent file and update the state.
-            file_name = '{} - {}'.format(show_name.replace(' ', '_'), episode_details['episode'])
+            file_name = '{}_{}'.format(show_name.replace(' ', '_'), episode_details['episode'])
             logger.info('Found torrent! File name: {}'.format(file_name))
             result_path = os.path.join(config.TORRENTS_DIRECTORY, file_name + '.torrent')
             open(result_path, 'wb').write(torrent_response.content)
