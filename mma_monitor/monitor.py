@@ -143,7 +143,8 @@ def report(diff_state):
     """
     logger.info('Creating E-Mail report...')
 
-    new_episodes_text = dedent("""Hi,
+    new_episodes_text = dedent("""
+    Hi,
     Some brand new UFC fights are being downloaded right now, and we\'d thought you\'d want to know.
     Check back in Plex in about 2 hours from now to watch them...
     
