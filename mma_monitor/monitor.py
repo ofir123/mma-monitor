@@ -113,16 +113,16 @@ def check_today_torrents(last_state, session):
             show = guessit(title)
 
             if _validate_show(show):
-                show_title = show.get('title', '').lower()
+                episode_title = show.get('episode_title')
+                show_title = '{}{}'.format(
+                    show.get('title', '').lower(), ' - {}'.format(episode_title) if episode_title else '')
                 show_state = last_state.get(show_title)
 
                 if show_state:
                     episode_number = show.get('season', 0) * 100 + show.get('episode', 0)
 
                     if show_state['episode'] < episode_number:
-                        episode_title = show.get('episode_title')
-                        logger.info('New episode was found - {}: Episode {}{}'.format(
-                            show_title.title(), episode_number, ' - {}'.format(episode_title) if episode_title else ''))
+                        logger.info('New episode was found - {}: Episode {}'.format(show_title.title(), episode_number))
                         torrent_id = href.split('id=')[1].split('&')[0]
                         new_state[show_title] = {
                             'episode': episode_number,
