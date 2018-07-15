@@ -3,6 +3,7 @@ import smtplib
 import sys
 import os
 from email.mime.text import MIMEText
+from textwrap import dedent
 
 import requests_html
 from guessit import guessit
@@ -142,13 +143,13 @@ def report(diff_state):
     """
     logger.info('Creating E-Mail report...')
 
-    new_episodes_text = """
-    Hi,
+    new_episodes_text = dedent("""Hi,
     Some brand new UFC fights are being downloaded right now, and we\'d thought you\'d want to know.
     Check back in Plex in about 2 hours from now to watch them...
     
     The new fights are:
-    """
+
+    """)
     for show_name, episode_details in sorted(diff_state.items()):
         new_episodes_text += '\t{}: Episode {}\r\n'.format(
             show_name.title().replace('Ufc', 'UFC'), episode_details['episode'])
