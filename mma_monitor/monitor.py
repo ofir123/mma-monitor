@@ -79,11 +79,10 @@ def _validate_show(show):
     :param show: The show object to verify.
     :return: True if the show version is relevant, and False otherwise.
     """
-    show_source = show.get('source')
-    show_title = show.get('title', '').lower()
-    return show.get('screen_size') == '720p' and \
-        isinstance(show_source, str) and show_source.lower() == 'hdtv' and \
-        (not show_title or 'prelim' in show_title and 'early' not in show_title) and \
+    show_format = show.get('format', '').lower()
+    episode_title = show.get('episode_title', '').lower()
+    return show.get('screen_size') == '720p' and show_format == 'hdtv' and \
+        (not episode_title or 'prelim' in episode_title and 'early' not in episode_title) and \
         show.get('release_group', '').lower() != 'ebi'
 
 
@@ -121,8 +120,9 @@ def check_today_torrents(last_state, session):
                     episode_number = show.get('season', 0) * 100 + show.get('episode', 0)
 
                     if show_state['episode'] < episode_number:
-                        logger.info('New episode was found - {}: Episode {}'.format(
-                            show_title.title(), episode_number))
+                        episode_title = show.get('episode_title')
+                        logger.info('New episode was found - {}: Episode {}{}'.format(
+                            show_title.title(), episode_number, ' - {}'.format(episode_title) if episode_title else ''))
                         torrent_id = href.split('id=')[1].split('&')[0]
                         new_state[show_title] = {
                             'episode': episode_number,
