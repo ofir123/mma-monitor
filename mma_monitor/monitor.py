@@ -12,7 +12,7 @@ import ujson
 from mma_monitor import config
 from mma_monitor.shows import SHOWS_LIST
 
-MMA_TORRENTS_BASE_URL = 'https://www.mma-torrents.com'
+MMA_TORRENTS_BASE_URL = 'https://mma-torrents.com'
 
 logger = logbook.Logger('MMATorrentsMonitor')
 
@@ -113,7 +113,7 @@ def check_today_torrents(last_state, session):
             show = guessit(title)
 
             if _validate_show(show):
-                episode_title = show.get('episode_title')
+                episode_title = show.get('episode_title').lower()
                 show_title = '{}{}'.format(
                     show.get('title', '').lower(), ' - {}'.format(episode_title) if episode_title else '')
                 show_state = last_state.get(show_title)
@@ -122,7 +122,7 @@ def check_today_torrents(last_state, session):
                     episode_number = show.get('season', 0) * 100 + show.get('episode', 0)
 
                     if show_state['episode'] < episode_number:
-                        logger.info('New episode was found - {}: Episode {}'.format(show_title.title(), episode_number))
+                        logger.info('New episode was found - {}: Episode {}'.format(show_title, episode_number))
                         torrent_id = href.split('id=')[1].split('&')[0]
                         new_state[show_title] = {
                             'episode': episode_number,
@@ -130,7 +130,7 @@ def check_today_torrents(last_state, session):
                         }
                     else:
                         logger.debug('Found an already existing episode - {}: Episode {}. Skipping...'.format(
-                            show_title.title(), episode_number))
+                            show_title, episode_number))
     return new_state
 
 
@@ -178,8 +178,8 @@ def main():
         file_path = config.JSON_FILE_PATH or \
                     os.path.join(os.path.dirname(os.path.realpath(__file__)), 'last_state.json')
         last_state = _load_last_state(file_path)
-        # Login to mma-torrents.
         with requests_html.HTMLSession() as session:
+            # Login to mma-torrents.
             r = session.post(MMA_TORRENTS_BASE_URL + '/account-login.php', data={
                 'username': config.MMA_TORRENTS_USERNAME,
                 'password': config.MMA_TORRENTS_PASSWORD
