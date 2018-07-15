@@ -141,15 +141,24 @@ def report(diff_state):
     :param diff_state: A dict representing the diff from the last state.
     """
     logger.info('Creating E-Mail report...')
-    # Create message text.
-    new_episodes_text = ''
+
+    new_episodes_text = """
+    Hi,
+    Some brand new UFC fights are being downloaded right now, and we\'d thought you\'d want to know.
+    Check back in Plex in about 2 hours from now to watch them...
+    
+    The new fights are:
+    """
     for show_name, episode_details in sorted(diff_state.items()):
-        new_episodes_text += '{}: Episode {}\r\n'.format(
+        new_episodes_text += '\t{}: Episode {}\r\n'.format(
             show_name.title().replace('Ufc', 'UFC'), episode_details['episode'])
+    new_episodes_text += '\r\nHave a great time :)'
+
+    subject = 'Plex UFC Update ({} new vidoes!)'.format(len(diff_state))
 
     # Send messages.
     for to_address in config.EMAILS_LIST:
-        _send_message(to_address, config.SUBJECT, new_episodes_text)
+        _send_message(to_address, subject, new_episodes_text)
 
 
 def download(diff_state, session):

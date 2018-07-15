@@ -7,10 +7,6 @@ GMAIL_USERNAME = 'myuser@gmail.com'
 GMAIL_PASSWORD = 'mypassword'
 # Add all relevant E-Mail addresses to this list.
 EMAILS_LIST = ['example@email.com']
-# The update message subject.
-SUBJECT = 'Your Daily UFC Update!'
-# The update message intro.
-MESSAGE = 'Hi,\r\nYour Daily UFC fights update is here.\r\nEnjoy!'
 
 # mma-torrents settings.
 
