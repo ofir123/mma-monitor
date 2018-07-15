@@ -128,6 +128,9 @@ def check_today_torrents(last_state, session):
                             'episode': episode_number,
                             'torrent': f'https://mma-torrents.com/download.php?id={torrent_id}'
                         }
+                    else:
+                        logger.debug('Found an already existing episode - {}: Episode {}. Skipping...'.format(
+                            show_title.title(), episode_number))
     return new_state
 
 
