@@ -83,7 +83,7 @@ def _validate_show(show):
     show_format = show.get('format', '').lower()
     episode_title = show.get('episode_title', '').lower()
     return show.get('screen_size') == '720p' and show_format == 'hdtv' and \
-        (not episode_title or 'prelim' in episode_title and 'early' not in episode_title) and \
+        (not episode_title or 'prelim' in episode_title and 'early' not in episode_title or 'vs' in episode_title) and \
         show.get('release_group', '').lower() != 'ebi'
 
 
