@@ -80,7 +80,7 @@ def _validate_show(show):
     :param show: The show object to verify.
     :return: True if the show version is relevant, and False otherwise.
     """
-    show_format = show.get('format', '').lower()
+    show_format = show.get('format', '').lower() or show.get('source', '').lower()
     episode_title = show.get('episode_title', '').lower()
     return show.get('screen_size') == '720p' and show_format == 'hdtv' and \
         (not episode_title or
