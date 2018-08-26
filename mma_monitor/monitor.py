@@ -126,7 +126,7 @@ def check_today_torrents(last_state, session):
                     episode_number = show.get('season', 0) * 100 + show.get('episode', 0)
 
                     if show_state['episode'] < episode_number:
-                        logger.info('New episode was found - {}: Episode {}'.format(show_title, episode_number))
+                        logger.info(f'New episode was found - {show}')
                         torrent_id = href.split('id=')[1].split('&')[0]
                         new_state[show_title] = {
                             'episode': episode_number,
