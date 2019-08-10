@@ -4,6 +4,8 @@ SHOWS_LIST = [
     'ufc - prelims',
     'ufc fight night',
     'ufc fight night - prelims',
+    'ufc on espn',
+    'ufc on espn - prelims',
     'ufc on fox',
     'ufc on fox - prelims'
 ]
