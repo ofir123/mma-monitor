@@ -1,4 +1,5 @@
 from copy import deepcopy
+import json
 import smtplib
 import sys
 import os
@@ -8,7 +9,6 @@ from textwrap import dedent
 import requests_html
 from guessit import guessit
 import logbook
-import ujson
 
 from mma_monitor import config
 from mma_monitor.shows import SHOWS_LIST
@@ -68,7 +68,7 @@ def _load_last_state(file_path):
     if not os.path.isfile(file_path):
         logger.info('File doesn\'t exist! Starting from scratch...')
         return {show: {'episode': -1, 'torrent': None} for show in SHOWS_LIST}
-    return ujson.load(open(file_path, 'r', encoding='UTF-8'))
+    return json.load(open(file_path, 'r', encoding='UTF-8'))
 
 
 def _validate_show(show):
@@ -217,7 +217,8 @@ def main():
             else:
                 logger.info('Nothing to report - No mail was sent.')
         # Update state file.
-        ujson.dump(new_state, open(file_path, 'w'), indent=4)
+        if diff_state:
+            json.dump(new_state, open(file_path, 'w'), indent=4)
         logger.info('All done!')
 
 

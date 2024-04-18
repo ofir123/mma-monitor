@@ -6,7 +6,7 @@ setup(
     version='1.0',
     packages=find_packages(),
     long_description=open('README.md').read(),
-    install_requires=['logbook', 'requests-html', 'ujson', 'guessit'],
+    install_requires=['logbook', 'requests-html', 'guessit'],
     entry_points={
       'console_scripts': [
           'mma_monitor = mma_monitor.monitor:main'
